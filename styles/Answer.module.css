@@ -1,0 +1,49 @@
+.answerCtn {
+  position: absolute;
+  top: 15%;
+  width: 100%;
+  text-align: center;
+}
+
+.character {
+  font-family: "Luckiest Guy";
+  font-size: 3rem;
+  text-align: center;
+  border-bottom: 8px solid black;
+  margin: 0 10px;
+  display: inline-block;
+  min-width: 30px;
+  height: 80px;
+  color: black;
+}
+
+.notVisible {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible !important;
+}
+
+span.visible + .character {
+  border-bottom-color: #09c !important;
+}
+
+/*PHONE*/
+@media only screen and (max-width: 500px) {
+  .answerCtn {
+    top: 32%;
+  }
+
+  .character {
+    font-size: 1.4rem;
+    border-bottom: 3px solid black;
+    height: 40px;
+    min-width: 20px;
+    margin: 0 8px;
+  }
+}
+
+/*IPAD*/
+@media only screen and (max-width: 850px) {
+}

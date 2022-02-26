@@ -1,0 +1,28 @@
+
+.loginCtn {
+  padding: 100px 50px;
+  margin: auto;
+  background: black;
+  color: white;
+  height: 100vh;
+}
+
+.ocean {
+  background: url("../public/bg.jpeg");
+  background-size: cover;
+  text-align: center;
+  padding: 0 25px;
+  height: 100vh;
+}
+
+.gameTitle {
+  font-family: "Luckiest Guy", sans-serif;
+  font-size: 3.5rem;
+}
+
+.attackShip {
+  position: absolute;
+  z-index: 9999;
+  top: 100px;
+  left: 40%;
+}

@@ -1,0 +1,71 @@
+.keyButtonCtn {
+  position: relative;
+  background: black;
+  max-width: 361px;
+}
+
+.keyButton {
+  font-family: "Luckiest Guy";
+  border: 1px solid gray;
+  background: #cbbdb3;
+  color: dimgray;
+  text-align: center;
+  padding: 27px 0px;
+  height: 75px;
+  width: 50px;
+  float: left;
+}
+
+.keyButton:hover {
+  background: #1f9cc6;
+  cursor: pointer;
+  color: white;
+}
+
+.hintBtn {
+  border: 1px solid #9a765b;
+  background: #9a765b;
+  max-width: 361px;
+  color: white;
+}
+
+.hintBtn:hover {
+  background: #09c;
+  color: white;
+}
+
+.keyUsed,
+.keyUsed:hover {
+  background: dimgray;
+  cursor: default;
+  color: white;
+}
+
+.isCorrect,
+.isCorrect:hover {
+  background: #09c !important;
+  cursor: default;
+}
+
+@media only screen and (max-width: 500px) {
+  .keyButtonCtn {
+    margin-top: 25px;
+    max-width: 100%;
+  }
+
+  .keyButton {
+    width: 54px;
+  }
+}
+
+/*IPAD*/
+@media only screen and (max-width: 850px) {
+  .keyButtonCtn {
+    margin-top: 25px;
+    max-width: 100%;
+  }
+
+  .keyButton {
+    width: 60.5px;
+  }
+}

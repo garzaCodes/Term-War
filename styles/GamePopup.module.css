@@ -1,0 +1,28 @@
+.bannerCtn {
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  z-index: 9999;
+}
+
+.banner {
+  background: black;
+  padding: 30px 10px;
+  color: white;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bannerTitle {
+  font-size: 2rem;
+  padding-top: 0;
+}
+
+.score {
+  color: #09c;
+  font-weight: 600;
+}
+
+.scoreMsg {
+  margin: 3px 0;
+}

@@ -1,0 +1,38 @@
+.scoreCtn {
+  font-family: "Luckiest Guy";
+  position: absolute;
+  background: black;
+  text-align: center;
+  padding: 5px;
+  left: 10px;
+  top: 10px;
+  min-width: 100px;
+}
+
+.scoreHeader {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.score {
+  font-weight: 600;
+  text-align: center;
+  color: #09c;
+  font-size: 2rem;
+}
+
+@media only screen and (max-width: 500px) {
+  .scoreCtn {
+    min-width: 70px;
+  }
+
+  .scoreHeader {
+    font-size: 0.7rem;
+  }
+
+  .score {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,8 @@
+.game {
+  background: black;
+  height: 100vh;
+}
+
+.gameContainer {
+  padding: 15px;
+}

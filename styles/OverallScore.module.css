@@ -1,0 +1,14 @@
+.scoreHeader {
+  font-size: 0.8rem;
+  font-family: "Luckiest Guy", sans-serif;
+  text-transform: uppercase;
+  color: white;
+}
+
+.score {
+  color: #09c;
+  font-weight: 600;
+  font-size: 1.2rem;
+  font-family: "Luckiest Guy", sans-serif;
+  margin-bottom: 10px;
+}

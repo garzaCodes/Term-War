@@ -1,0 +1,44 @@
+.healthbarCtn {
+  position: absolute;
+  margin: 5px;
+  right: 5px;
+  top: 5px;
+  background: black;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  line-height: 1.5rem;
+}
+
+.healthbar {
+  display: inline-block;
+  margin-left: 1px;
+  height: 1.5rem;
+  width: 1rem;
+}
+
+.healthbarTitle {
+  color: white;
+  height: 1.5rem;
+  display: inline-block;
+  display: none;
+  padding-right: 5px;
+}
+
+.healthy {
+  background: green;
+}
+
+.hit {
+  background: red;
+}
+
+@media only screen and (max-width: 500px) {
+  .healthbar {
+    width: 0.7rem;
+  }
+
+  .healthbarTitle {
+    height: 1.2rem;
+  }
+}
