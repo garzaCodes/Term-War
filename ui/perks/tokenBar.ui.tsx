@@ -9,7 +9,7 @@ export default function TokenBarUi({ handleToken, word }: ITokenBar) {
 
   const tokenElems = tokens.map((p: IToken) => {
     return (
-      <TokenUI handleToken={updateToken} word={word} key={word} token={p} />
+      <TokenUI handleToken={updateToken} word={word} key={p.type} token={p} />
     );
   });
 

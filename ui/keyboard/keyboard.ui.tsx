@@ -32,7 +32,7 @@ export default function KeyboardUI({
                   handleSelect={handleSelect}
                   button={key}
                   word={word}
-                  key={word}
+                  key={i}
                 />
               );
             })}

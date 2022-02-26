@@ -11,6 +11,11 @@ import styles from "../styles/Play.module.css";
 import { WordList } from "../constants/words";
 import LevelUI from "../ui/levels/level.ui";
 import Head from "next/head";
+import { RANKS } from "../constants/rank.constant";
+import { IRank } from "../models/rank.model";
+import PromotionUI from "../ui/core/promotion.ui";
+import TokenService from "../services/tokenService";
+import { clear } from "dom-helpers";
 
 const wordList = WordList;
 
@@ -29,6 +34,9 @@ export default function Game() {
   const [totalHealth, setTotalHealth] = useState<boolean[]>(
     DEFAULTS.totalHealthXP
   );
+  const [showDefinition, setShowDefinition] = useState<boolean>(false);
+  const [showPromotion, setPromotion] = useState<boolean>(false);
+  const [definition, setDefinition] = useState<string>("");
   const [usedHints, setUsedHints] = useState<string[]>([]);
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameWon, setGameWon] = useState<boolean>(false);
@@ -45,9 +53,10 @@ export default function Game() {
   const [sound, setSound] = useState<boolean>(false);
 
   // GAME SCORING
+  const [rank, setRank] = useState<IRank>(GameService.getRank(0));
   const [totalScore, setTotalScore] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
   const [hits, setHits] = useState<number>(DEFAULTS.maxHP);
+  const [score, setScore] = useState<number>(0);
   const [xp, setXP] = useState<number>(0);
 
   useEffect(() => {
@@ -81,22 +90,31 @@ export default function Game() {
                     <LevelUI currentLevel={level} />
                   </Col>
                   <Col sm={6} slot={"end"} style={{ textAlign: "right" }}>
-                    <OverallScoreUi xp={xp} totalScore={totalScore} />
+                    <OverallScoreUi
+                      xp={xp}
+                      totalScore={totalScore}
+                      rank={rank}
+                    />
                   </Col>
                 </Row>
               </div>
 
               <PlayAreaUI
+                clearPromotion={clearPromotion}
+                showDefinition={showDefinition}
                 correctGuesses={correctChars}
+                showPromotion={showPromotion}
                 totalHealth={totalHealth}
                 handleMedic={regenHealth}
                 handleAudio={toggleAudio}
                 handleToken={handleToken}
+                definition={definition}
                 resetGame={resetGame}
                 gameOver={gameOver}
                 gameWon={gameWon}
                 score={score}
                 sound={sound}
+                rank={rank}
                 word={word}
                 key={word}
               />
@@ -114,7 +132,7 @@ export default function Game() {
                 />
               </Col>
               <Col className={"mt-4 d-none d-lg-block"}>
-                <OverallScoreUi xp={xp} totalScore={totalScore} />
+                <OverallScoreUi xp={xp} totalScore={totalScore} rank={rank} />
               </Col>
             </Col>
           </Row>
@@ -141,7 +159,11 @@ export default function Game() {
     const usedChars: string[] = [
       ...new Set([...usedHints, ...keySelectionHistory]),
     ];
-    const hintChar: string = GameService.getHint(word, usedChars);
+    const hintChar: string = GameService.getHint(
+      word,
+      usedChars,
+      keySelectionHistory
+    );
 
     if (hintChar) {
       setUsedHints((usedHints) => {
@@ -158,10 +180,14 @@ export default function Game() {
     const isWinner = guesses.sort().join("") === answer.sort().join("");
 
     if (isWinner) {
-      GameService.playVictoryMusic(sound, audioPlayerRef, victoryMusic);
-      calculateWordScore(score, hits);
-      endGame(true);
+      levelWon();
     }
+  }
+
+  function levelWon() {
+    GameService.playVictoryMusic(sound, audioPlayerRef, victoryMusic);
+    calculateWordScore(score, hits);
+    endGame(true);
   }
 
   function handleKeySelect(
@@ -185,15 +211,21 @@ export default function Game() {
   }
 
   function handleToken(token: IToken) {
-    if (token.type === "Cluster") {
-      for (let i = 0; i < 3; i++) {
-        setTimeout(() => {
-          hint();
-        }, 800);
-      }
-    }
-    if (token.type === "Hint") {
-      hint();
+    const TokenActions: any = {
+      Dictionary: TokenService.useDefinition,
+      Cluster: TokenService.useClusterBomb,
+      Hint: TokenService.useHint,
+    };
+    const fnReturn = TokenActions[token.type](word, hint);
+
+    if (fnReturn) {
+      fnReturn.then((res: any) => {
+        setDefinition(() => {
+          setShowDefinition(true);
+          clearDefinition();
+          return res;
+        });
+      });
     }
   }
 
@@ -234,6 +266,16 @@ export default function Game() {
     setScore(newScore);
 
     setXP(xp + 100);
+
+    setRank((rank) => {
+      const newRank = GameService.setRank(xp);
+
+      if (rank !== newRank) {
+        setPromotion(true);
+      }
+
+      return newRank;
+    });
   }
 
   function endGame(gameWon = false) {
@@ -287,6 +329,16 @@ export default function Game() {
     });
 
     setTotalHealth(newHealth);
+  }
+
+  function clearPromotion() {
+    setPromotion(false);
+  }
+
+  function clearDefinition() {
+    setTimeout(() => {
+      setShowDefinition(false);
+    }, 5000);
   }
 
   function resetGame(gameWon: boolean) {

@@ -1,9 +1,7 @@
+import { RANKS } from "../constants/rank.constant";
+
 const GameService: any = {};
 
-
-/**
- * Get hint is used to get a unique hint from the current word.
- */
 GameService.getHint = function (
   word: string,
   usedHints: string[],
@@ -11,8 +9,8 @@ GameService.getHint = function (
 ): string {
   const usedChars: string[] = [...new Set([...usedHints, ...keySelection])];
   const wordArr: string[] = [...new Set(word)].sort();
-  let filteredArr: string[];
   let random: number;
+  let filteredArr;
 
   if (usedChars) {
     filteredArr = wordArr.filter((char) => !usedChars.includes(char));
@@ -80,6 +78,20 @@ GameService.playDefeatMusic = function (
   audioPlayerRef.current.pause();
   defeatMusic.volume = 0.3;
   defeatMusic.play();
+};
+
+GameService.getRank = function (experiencePoints: number) {
+  const rank = GameService.setRank(experiencePoints);
+  return rank;
+};
+
+GameService.setRank = function (experiencePoints: number) {
+  const roundUpExperience = Math.round(experiencePoints / 100) * 100;
+  const rank = RANKS.filter(
+    (rank) => rank.experienceNeeded <= roundUpExperience
+  );
+
+  return rank[rank.length - 1];
 };
 
 export default GameService;

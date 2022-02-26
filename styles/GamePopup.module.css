@@ -1,4 +1,5 @@
 .bannerCtn {
+  font-family: "Luckiest Guy", sans-serif;
   position: absolute;
   top: 30%;
   width: 100%;
@@ -15,14 +16,17 @@
 
 .bannerTitle {
   font-size: 2rem;
+  color: #09c;
   padding-top: 0;
 }
 
 .score {
-  color: #09c;
+  font-family: sans-serif;
+  color: limegreen;
   font-weight: 600;
 }
 
 .scoreMsg {
+  font-family: sans-serif !important;
   margin: 3px 0;
 }

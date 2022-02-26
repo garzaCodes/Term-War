@@ -37,7 +37,7 @@ export default function GamePopupUI({
       <div className={styles.banner}>
         <div className={styles.bannerTitle}>{bannerTitle}</div>
 
-        <div className={"mb-3"}>
+        <div className={styles.scoreMsg} style={{margin:'15px 0'}}>
           {wordStr}
           {scoreMsg}
         </div>

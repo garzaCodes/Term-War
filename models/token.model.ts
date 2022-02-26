@@ -14,3 +14,9 @@ export interface IToken {
   count: number;
   icon: string;
 }
+
+export interface ITokenAction {
+  Dictionary: any;
+  Cluster: any;
+  Hint: any;
+}
