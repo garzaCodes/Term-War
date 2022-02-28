@@ -1,11 +1,10 @@
 .promotionModal {
-  border: 2px solid #09c;
-
+  border: 1px outset gray;
   position: absolute;
   z-index: 9999999;
   margin: 0 auto;
   left: 30%;
-  top: 28%;
+  top: 26%;
 }
 
 .promotionModalBody {

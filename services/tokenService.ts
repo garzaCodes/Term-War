@@ -17,7 +17,7 @@ TokenService.getTokens = function (): IToken[] {
 TokenService.useDefinition = function (word: string) {
   const url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
-  return fetch(url + word, {
+  return fetch(url + word.toLowerCase(), {
     method: "GET",
   })
     .then((response) => response.json())

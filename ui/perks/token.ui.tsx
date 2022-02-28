@@ -19,6 +19,7 @@ export default function TokenUI({ token, handleToken }: ITokenUI) {
   );
 
   function powerUpClicked() {
+    if (token.count === 0) return;
     handleToken(token);
   }
 }
