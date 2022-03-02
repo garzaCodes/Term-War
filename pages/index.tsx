@@ -1,12 +1,43 @@
 import { Button, Col, Row } from "react-bootstrap";
 import attackShip from "../public/attackShip.png";
+import AuthSvc from "../firebase/authentication";
 import styles from "../styles/Home.module.css";
 import type { NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/router";
+
+interface IloginForm {
+  email: string;
+  password: string;
+}
 
 const Home: NextPage = () => {
+  const router = useRouter();
+  const [loginForm, setLoginForm] = useState<IloginForm>({
+    email: "",
+    password: "",
+  });
+
+  const handleEmailChange = (event: any) => {
+    event.persist();
+
+    setLoginForm((values: any) => ({
+      ...values,
+      email: event.target.value,
+    }));
+  };
+
+  const handlePasswordChange = (event: any) => {
+    event.persist();
+
+    setLoginForm((values: any) => ({
+      ...values,
+      password: event.target.value,
+    }));
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -23,24 +54,28 @@ const Home: NextPage = () => {
           <div className={"form-group"}>
             <input
               placeholder={"Email Account"}
-              type="email"
+              onChange={handleEmailChange}
               className={"form-control"}
+              value={loginForm.email}
+              type="email"
             />
           </div>
 
           <div className={"form-group"}>
             <input
+              className={"form-control mt-3"}
+              onChange={handlePasswordChange}
+              value={loginForm.password}
               placeholder={"Password"}
               type="password"
-              className={"form-control mt-3"}
             />
           </div>
 
-          <Link href={"/play"}>
-            <div className={"d-grid gap-2 mt-3"}>
-              <Button variant={"secondary"}>Sign In</Button>
-            </div>
-          </Link>
+          <div className={"d-grid gap-2 mt-3"}>
+            <Button onClick={login} variant={"secondary"}>
+              Sign In
+            </Button>
+          </div>
 
           <div className={"d-grid gap-2 mt-3"}>
             <Button variant={"link"}>Register</Button>
@@ -55,6 +90,18 @@ const Home: NextPage = () => {
       </Row>
     </div>
   );
+
+  function login() {
+    const loginInfo: IloginForm = loginForm;
+
+    console.log(loginInfo);
+
+    AuthSvc.signUnWithEmail(loginInfo.email, loginInfo.password).then(
+      (res: any) => {
+        console.log(res);
+      }
+    );
+  }
 };
 
 export default Home;

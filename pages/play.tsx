@@ -11,11 +11,8 @@ import styles from "../styles/Play.module.css";
 import { WordList } from "../constants/words";
 import LevelUI from "../ui/levels/level.ui";
 import Head from "next/head";
-import { RANKS } from "../constants/rank.constant";
 import { IRank } from "../models/rank.model";
-import PromotionUI from "../ui/core/promotion.ui";
 import TokenService from "../services/tokenService";
-import { clear } from "dom-helpers";
 
 const wordList = WordList;
 
