@@ -96,11 +96,11 @@ const Home: NextPage = () => {
 
     console.log(loginInfo);
 
-    AuthSvc.signUnWithEmail(loginInfo.email, loginInfo.password).then(
-      (res: any) => {
-        console.log(res);
-      }
-    );
+    // AuthSvc.signUnWithEmail(loginInfo.email, loginInfo.password).then(
+    //   (res: any) => {
+    //     console.log(res);
+    //   }
+    // );
   }
 };
 

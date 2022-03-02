@@ -6,7 +6,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-
+import { FirebaseApp } from './client.app';
 
 //
 // const googleProvider = new GoogleAuthProvider();
@@ -84,6 +84,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { AuthUser } from "../models/authUser.model";
+import { FirebaseAuth } from '@firebase/auth-types';
 
 const formatAuthUser = (user: any) => ({
   uid: user.uid,
@@ -93,7 +94,6 @@ const formatAuthUser = (user: any) => ({
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
 
   const authStateChanged = async (authState: any) => {
     if (!authState) {
@@ -109,7 +109,7 @@ export default function useFirebaseAuth() {
   };
 
   useEffect(() => {
-    const auth = getAuth();
+    const auth = getAuth(FirebaseApp);
     return onAuthStateChanged(auth, authStateChanged);
   });
 
