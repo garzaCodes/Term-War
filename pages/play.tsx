@@ -13,12 +13,18 @@ import LevelUI from "../ui/levels/level.ui";
 import Head from "next/head";
 import { IRank } from "../models/rank.model";
 import TokenService from "../services/tokenService";
+import { useAuth } from "../firebase/authContext";
+import { Router, useRouter } from "next/router";
 
 const wordList = WordList;
 
 export default function Game() {
   // CURRENT WORD
   const [word, setWord] = useState<string>("");
+
+  // USER STATE
+  const { authUser, loading } = useAuth();
+  const router = useRouter();
 
   // KEYBOARD STATE
   const [keySelectionHistory, setKeySelectionHistory] = useState<string[]>([]);
@@ -57,11 +63,15 @@ export default function Game() {
   const [xp, setXP] = useState<number>(0);
 
   useEffect(() => {
+    if (!loading && !authUser) {
+      router.push("/");
+    }
+
     setVictoryMusic(new Audio("/victory.mp3"));
     setDefeatMusic(new Audio("/defeat.mp3"));
     setFireMissile(new Audio("/myCannon.mp3"));
     setImpact(new Audio("/impact.mp3"));
-  }, []);
+  }, [authUser, loading]);
 
   init();
 

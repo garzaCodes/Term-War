@@ -4,7 +4,6 @@ import "@fortawesome/fontawesome-free/css/all.css";
 
 import type { AppProps } from "next/app";
 import AuthContext from "../firebase/authContext";
-import { FirebaseApp } from "@firebase/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

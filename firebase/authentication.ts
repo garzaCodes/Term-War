@@ -1,101 +1,29 @@
+import { FirebaseApp } from "./client.app";
+import { useEffect, useState } from "react";
+import { AuthUser } from "../models/authUser.model";
 import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
 } from "firebase/auth";
-import { FirebaseApp } from './client.app';
-
-//
-// const googleProvider = new GoogleAuthProvider();
-//
-// const AuthSvc: any = {};
-//
-// AuthSvc.currenUser = null;
-//
-// AuthSvc.userToken = null;
-//
-// AuthSvc.signInWithGoogle = function (email: string, password: string) {
-//   const auth = getAuth();
-//
-//   signInWithEmailAndPassword(auth, email, password)
-//     .then((userCredential) => {
-//       AuthSvc.currenUser = userCredential.user;
-//     })
-//     .catch((error) => {
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//
-//       console.error("Google Auth Failed", {
-//         code: errorCode,
-//         msg: errorMessage,
-//         email: email,
-//       });
-//     });
-// };
-//
-// AuthSvc.signUnWithEmail = function (email: string, password: string) {
-//   const auth = getAuth();
-//
-//   return createUserWithEmailAndPassword(auth, email, password)
-//     .then((userCredential) => {
-//       AuthSvc.currenUser = userCredential.user;
-//     })
-//     .catch((error) => {
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//
-//       console.error("Google Auth Failed", {
-//         code: errorCode,
-//         msg: errorMessage,
-//         email: email,
-//       });
-//     });
-// };
-//
-// AuthSvc.signInWithGoogle = function () {
-//   const auth = getAuth();
-//
-//   signInWithPopup(auth, googleProvider)
-//     .then((result) => {
-//       const credential: any = GoogleAuthProvider.credentialFromResult(result);
-//       AuthSvc.userToken = credential.accessToken;
-//       AuthSvc.currenUser = result.user;
-//     })
-//     .catch((error) => {
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//       const email = error.email;
-//       const credential = GoogleAuthProvider.credentialFromError(error);
-//
-//       console.error("Google Auth Failed", {
-//         code: errorCode,
-//         msg: errorMessage,
-//         email: email,
-//         cred: credential,
-//       });
-//     });
-// };
-//
-// export default AuthSvc;
-//
-
-import { useEffect, useState } from "react";
-import { AuthUser } from "../models/authUser.model";
-import { FirebaseAuth } from '@firebase/auth-types';
 
 const formatAuthUser = (user: any) => ({
   uid: user.uid,
   email: user.email,
 });
 
+const googleProvider = new GoogleAuthProvider();
+
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  let auth: any;
 
   const authStateChanged = async (authState: any) => {
+    console.log("In Auth Changed", authState);
+
     if (!authState) {
       setAuthUser(null);
       setLoading(false);
@@ -109,11 +37,63 @@ export default function useFirebaseAuth() {
   };
 
   useEffect(() => {
-    const auth = getAuth(FirebaseApp);
-    return onAuthStateChanged(auth, authStateChanged);
-  });
+    auth = getAuth(FirebaseApp);
+
+    const unsubscribe = auth.onAuthStateChanged(authStateChanged);
+
+    return () => unsubscribe();
+  }, []);
+
+  function signInWithEmail(email: string, password: string): any {
+    return signInWithEmailAndPassword(auth, email, password).catch(
+      (error: any) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.error("Google Auth Failed", {
+          code: errorCode,
+          msg: errorMessage,
+          email: email,
+        });
+      }
+    );
+  }
+
+  function signUpWithEmail(email: string, password: string) {
+    return createUserWithEmailAndPassword(auth, email, password).catch(
+      (error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.error("Google Auth Failed", {
+          code: errorCode,
+          msg: errorMessage,
+          email: email,
+        });
+      }
+    );
+  }
+
+  function signInWithGoogle() {
+    return signInWithPopup(auth, googleProvider).catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+
+      console.error("Google Auth Failed", {
+        code: errorCode,
+        msg: errorMessage,
+        email: email,
+        cred: credential,
+      });
+    });
+  }
 
   return {
+    signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
     authUser,
     loading,
   };

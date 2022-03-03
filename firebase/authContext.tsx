@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 import useFirebaseAuth from "./authentication";
 
 interface IAuthContext {
@@ -8,6 +8,10 @@ interface IAuthContext {
 const authUserContext = createContext({
   authUser: null,
   loading: true,
+  signInWithEmail: async (email: string, password: string) => {},
+  signUpWithEmail: async (email: string, password: string) => {},
+  signInWithGoogle: async () => {},
+  signOut: async () => {},
 });
 
 export default function AuthContext({ children }: IAuthContext) {
@@ -18,4 +22,4 @@ export default function AuthContext({ children }: IAuthContext) {
   );
 }
 
-export const useAuth = ()=> useContext(authUserContext)
+export const useAuth = () => useContext(authUserContext);

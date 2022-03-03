@@ -1,12 +1,12 @@
 import { Button, Col, Row } from "react-bootstrap";
 import attackShip from "../public/attackShip.png";
-import AuthSvc from "../firebase/authentication";
 import styles from "../styles/Home.module.css";
 import type { NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useAuth } from "../firebase/authContext";
 
 interface IloginForm {
   email: string;
@@ -15,28 +15,9 @@ interface IloginForm {
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [loginForm, setLoginForm] = useState<IloginForm>({
-    email: "",
-    password: "",
-  });
-
-  const handleEmailChange = (event: any) => {
-    event.persist();
-
-    setLoginForm((values: any) => ({
-      ...values,
-      email: event.target.value,
-    }));
-  };
-
-  const handlePasswordChange = (event: any) => {
-    event.persist();
-
-    setLoginForm((values: any) => ({
-      ...values,
-      password: event.target.value,
-    }));
-  };
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const { signInWithEmail } = useAuth();
 
   return (
     <div className={styles.container}>
@@ -54,9 +35,11 @@ const Home: NextPage = () => {
           <div className={"form-group"}>
             <input
               placeholder={"Email Account"}
-              onChange={handleEmailChange}
+              onChange={(event) => {
+                setEmail(event.target.value);
+              }}
               className={"form-control"}
-              value={loginForm.email}
+              value={email}
               type="email"
             />
           </div>
@@ -64,8 +47,10 @@ const Home: NextPage = () => {
           <div className={"form-group"}>
             <input
               className={"form-control mt-3"}
-              onChange={handlePasswordChange}
-              value={loginForm.password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
+              value={password}
               placeholder={"Password"}
               type="password"
             />
@@ -91,16 +76,12 @@ const Home: NextPage = () => {
     </div>
   );
 
-  function login() {
-    const loginInfo: IloginForm = loginForm;
+  function login(e: any) {
+    e.preventDefault();
 
-    console.log(loginInfo);
-
-    // AuthSvc.signUnWithEmail(loginInfo.email, loginInfo.password).then(
-    //   (res: any) => {
-    //     console.log(res);
-    //   }
-    // );
+    signInWithEmail(email, password).then((authUser) => {
+      router.push("/play");
+    });
   }
 };
 
