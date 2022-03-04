@@ -1,23 +1,17 @@
 import { Button, Col, Row } from "react-bootstrap";
+import { useAuth } from "../firebase/authContext";
 import attackShip from "../public/attackShip.png";
 import styles from "../styles/Home.module.css";
-import type { NextPage } from "next";
-import Image from "next/image";
-import Head from "next/head";
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { useAuth } from "../firebase/authContext";
+import Image from "next/image";
+import { useState } from "react";
+import Head from "next/head";
 
-interface IloginForm {
-  email: string;
-  password: string;
-}
-
-const Home: NextPage = () => {
+export default function Home() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail, signUpWithEmail } = useAuth();
 
   return (
     <div className={styles.container}>
@@ -63,7 +57,9 @@ const Home: NextPage = () => {
           </div>
 
           <div className={"d-grid gap-2 mt-3"}>
-            <Button variant={"link"}>Register</Button>
+            <Button variant={"link"} onClick={register}>
+              Register
+            </Button>
           </div>
         </Col>
 
@@ -83,6 +79,12 @@ const Home: NextPage = () => {
       router.push("/play");
     });
   }
-};
 
-export default Home;
+  function register(e: any) {
+    e.preventDefault();
+
+    signUpWithEmail(email, password).then((res) => {
+      console.log(res);
+    });
+  }
+}

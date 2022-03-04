@@ -20,13 +20,13 @@ export default function OverallScoreUi({ xp, totalScore, rank }: IOverallScoreUI
       <Col sm={4}>
         <div>
           <div className={styles.scoreHeader}>Total Score</div>
-          <div className={styles.score}>{totalScore.toLocaleString()} pts</div>
+          <div className={styles.score}>{totalScore?.toLocaleString()} pts</div>
         </div>
       </Col>
       <Col sm={12}>
         <div>
           <div className={styles.scoreHeader}>Experience</div>
-          <div className={styles.score}>{xp.toLocaleString()} xp</div>
+          <div className={styles.score}>{xp?.toLocaleString()} xp</div>
         </div>
       </Col>
     </Row>

@@ -16,5 +16,5 @@ export interface IPlayArea {
   resetGame: any;
   score: number;
   word: string;
-  rank: IRank;
+  rank: IRank | undefined;
 }

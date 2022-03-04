@@ -15,6 +15,9 @@ import { IRank } from "../models/rank.model";
 import TokenService from "../services/tokenService";
 import { useAuth } from "../firebase/authContext";
 import { Router, useRouter } from "next/router";
+import { Account } from "../models/account.model";
+import PlayerUI from "../ui/core/player.ui";
+import AccountService from "../services/account.service";
 
 const wordList = WordList;
 
@@ -23,6 +26,7 @@ export default function Game() {
   const [word, setWord] = useState<string>("");
 
   // USER STATE
+  const [account, setAccount] = useState<Account | null>(null);
   const { authUser, loading } = useAuth();
   const router = useRouter();
 
@@ -56,7 +60,7 @@ export default function Game() {
   const [sound, setSound] = useState<boolean>(false);
 
   // GAME SCORING
-  const [rank, setRank] = useState<IRank>(GameService.getRank(0));
+  const [rank, setRank] = useState<IRank | undefined>(undefined);
   const [totalScore, setTotalScore] = useState<number>(0);
   const [hits, setHits] = useState<number>(DEFAULTS.maxHP);
   const [score, setScore] = useState<number>(0);
@@ -67,13 +71,17 @@ export default function Game() {
       router.push("/");
     }
 
-    setVictoryMusic(new Audio("/victory.mp3"));
-    setDefeatMusic(new Audio("/defeat.mp3"));
-    setFireMissile(new Audio("/myCannon.mp3"));
-    setImpact(new Audio("/impact.mp3"));
-  }, [authUser, loading]);
+    if (!account) {
+      loadAccount();
+    }
 
-  init();
+    if (!word) {
+      const w = getWord();
+      setWord(w);
+    }
+
+    loadMusic();
+  }, [authUser, loading]);
 
   return (
     <div>
@@ -105,6 +113,8 @@ export default function Game() {
                   </Col>
                 </Row>
               </div>
+
+              <PlayerUI />
 
               <PlayAreaUI
                 clearPromotion={clearPromotion}
@@ -150,16 +160,32 @@ export default function Game() {
 
   // GAME METHODS
 
-  function init() {
-    if (!word) {
-      setWord(getWord());
-    }
-  }
-
   function getWord() {
     return wordList[
       Math.floor(Math.random() * wordList.length)
     ].word.toUpperCase();
+  }
+
+  function loadAccount() {
+    setAccount((prev) => {
+      const account: Account = JSON.parse(
+        window.localStorage.getItem("currentPlayer") as string
+      );
+
+      setRank(GameService.getRank(account.xp));
+      setTotalScore(account.totalScore);
+      setLevel(account.currentLevel);
+      setXP(account.xp);
+
+      return account;
+    });
+  }
+
+  function loadMusic() {
+    setVictoryMusic(new Audio("/victory.mp3"));
+    setDefeatMusic(new Audio("/defeat.mp3"));
+    setFireMissile(new Audio("/myCannon.mp3"));
+    setImpact(new Audio("/impact.mp3"));
   }
 
   function hint() {
@@ -194,6 +220,7 @@ export default function Game() {
   function levelWon() {
     GameService.playVictoryMusic(sound, audioPlayerRef, victoryMusic);
     calculateWordScore(score, hits);
+
     endGame(true);
   }
 
@@ -269,19 +296,27 @@ export default function Game() {
 
   function calculateWordScore(score: number, hits: number) {
     let newScore = score * hits + hits * 10;
-    setTotalScore(totalScore + newScore);
+    const newTotalScore = totalScore + newScore;
+    const newRank = GameService.setRank(xp);
+
+    setTotalScore(newTotalScore);
     setScore(newScore);
 
     setXP(xp + 100);
 
     setRank((rank) => {
-      const newRank = GameService.setRank(xp);
-
       if (rank !== newRank) {
         setPromotion(true);
       }
-
       return newRank;
+    });
+
+    AccountService.updateAccount(account?.uid, {
+      ...account,
+      totalScore: newTotalScore,
+      currentLevel: level + 1,
+      rank: newRank,
+      xp: xp + 100,
     });
   }
 

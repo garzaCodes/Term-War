@@ -1,0 +1,16 @@
+.playerCtn {
+  font-family: "Luckiest Guy", sans-serif;
+  margin-bottom: 6px;
+  height: 40px;
+  color: white;
+  padding: 8px 10px;
+}
+
+.playerTitle {
+  font-size: 1.2rem;
+  float: left;
+}
+
+.backBtn {
+  float: right;
+}

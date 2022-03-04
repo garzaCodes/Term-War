@@ -5,9 +5,9 @@
 }
 
 .keyButton {
-  font-family: "Luckiest Guy";
+  font-family: "Luckiest Guy", sans-serif;
   border: 1px solid gray;
-  background: #cbbdb3;
+  background: lightgray;
   color: dimgray;
   text-align: center;
   padding: 27px 0px;

@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import AccountService from "../services/account.service";
 
 const formatAuthUser = (user: any) => ({
   uid: user.uid,
@@ -22,8 +23,6 @@ export default function useFirebaseAuth() {
   let auth: any;
 
   const authStateChanged = async (authState: any) => {
-    console.log("In Auth Changed", authState);
-
     if (!authState) {
       setAuthUser(null);
       setLoading(false);
@@ -37,16 +36,31 @@ export default function useFirebaseAuth() {
   };
 
   useEffect(() => {
-    auth = getAuth(FirebaseApp);
+    if (!auth) {
+      auth = getAuth(FirebaseApp);
+    }
 
     const unsubscribe = auth.onAuthStateChanged(authStateChanged);
 
     return () => unsubscribe();
   }, []);
 
+  return {
+    signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
+    authUser,
+    loading,
+  };
+
   function signInWithEmail(email: string, password: string): any {
-    return signInWithEmailAndPassword(auth, email, password).catch(
-      (error: any) => {
+    auth = getAuth(FirebaseApp);
+
+    return signInWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        AccountService.getAccount(res.user.uid, email);
+      })
+      .catch((error: any) => {
         const errorCode = error.code;
         const errorMessage = error.message;
 
@@ -55,13 +69,17 @@ export default function useFirebaseAuth() {
           msg: errorMessage,
           email: email,
         });
-      }
-    );
+      });
   }
 
   function signUpWithEmail(email: string, password: string) {
-    return createUserWithEmailAndPassword(auth, email, password).catch(
-      (error) => {
+    auth = getAuth(FirebaseApp);
+
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        AccountService.createAccount(res.user.uid, email);
+      })
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
 
@@ -70,8 +88,7 @@ export default function useFirebaseAuth() {
           msg: errorMessage,
           email: email,
         });
-      }
-    );
+      });
   }
 
   function signInWithGoogle() {
@@ -89,12 +106,4 @@ export default function useFirebaseAuth() {
       });
     });
   }
-
-  return {
-    signInWithGoogle,
-    signInWithEmail,
-    signUpWithEmail,
-    authUser,
-    loading,
-  };
 }

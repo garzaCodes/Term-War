@@ -5,7 +5,9 @@
   background-size: contain;
   position: relative;
   overflow: hidden;
-  height: 706px;
+  height: 80vh;
+  clear: both;
+  /*height: 706px;*/
   opacity: 0.9;
 }
 
