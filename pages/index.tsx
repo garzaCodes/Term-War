@@ -1,17 +1,20 @@
-import { Button, Col, Row } from "react-bootstrap";
-import { useAuth } from "../firebase/authContext";
+import { Col, Row } from "react-bootstrap";
 import attackShip from "../public/attackShip.png";
 import styles from "../styles/Home.module.css";
-import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState } from "react";
 import Head from "next/head";
+import LoginUi from "../ui/auth/login.ui";
+import RegisterUi from "../ui/auth/register.ui";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const { signInWithEmail, signUpWithEmail } = useAuth();
+  const [showRegisterForm, setShowRegisterForm] = useState<boolean>(false);
+
+  const form = showRegisterForm ? (
+    <LoginUi showRegister={showRegister} />
+  ) : (
+    <RegisterUi showRegister={showRegister}/>
+  );
 
   return (
     <div className={styles.container}>
@@ -22,45 +25,8 @@ export default function Home() {
       <Row>
         <Col lg={4} md={12} className={styles.loginCtn}>
           <h3 className={styles.gameTitle}>Term War</h3>
-          <p style={{ color: "#09c" }}>
-            Sign-in to get started, or sign-up to create your account.
-          </p>
-
-          <div className={"form-group"}>
-            <input
-              placeholder={"Email Account"}
-              onChange={(event) => {
-                setEmail(event.target.value);
-              }}
-              className={"form-control"}
-              value={email}
-              type="email"
-            />
-          </div>
-
-          <div className={"form-group"}>
-            <input
-              className={"form-control mt-3"}
-              onChange={(event) => {
-                setPassword(event.target.value);
-              }}
-              value={password}
-              placeholder={"Password"}
-              type="password"
-            />
-          </div>
-
-          <div className={"d-grid gap-2 mt-3"}>
-            <Button onClick={login} variant={"secondary"}>
-              Sign In
-            </Button>
-          </div>
-
-          <div className={"d-grid gap-2 mt-3"}>
-            <Button variant={"link"} onClick={register}>
-              Register
-            </Button>
-          </div>
+          {form}
+          <div style={{ color: "#fff" }}>{showRegisterForm}</div>
         </Col>
 
         <Col lg={8} className={styles.ocean}>
@@ -72,19 +38,8 @@ export default function Home() {
     </div>
   );
 
-  function login(e: any) {
-    e.preventDefault();
-
-    signInWithEmail(email, password).then((authUser) => {
-      router.push("/play");
-    });
-  }
-
-  function register(e: any) {
-    e.preventDefault();
-
-    signUpWithEmail(email, password).then((res) => {
-      console.log(res);
-    });
+  function showRegister(showForm: boolean) {
+    console.log(showForm);
+    setShowRegisterForm(showForm);
   }
 }

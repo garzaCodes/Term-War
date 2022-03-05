@@ -32,15 +32,12 @@ export default function Game() {
 
   // KEYBOARD STATE
   const [keySelectionHistory, setKeySelectionHistory] = useState<string[]>([]);
+  const [correctChars, setCorrectChars] = useState<string[]>([]);
   const [keyButtons, setKeyButtons] = useState<IKey[]>(
     DEFAULTS.keyboardConstant
   );
-  const [correctChars, setCorrectChars] = useState<string[]>([]);
 
   // GAME STATE
-  const [totalHealth, setTotalHealth] = useState<boolean[]>(
-    DEFAULTS.totalHealthXP
-  );
   const [showDefinition, setShowDefinition] = useState<boolean>(false);
   const [showPromotion, setPromotion] = useState<boolean>(false);
   const [definition, setDefinition] = useState<string>("");
@@ -48,6 +45,9 @@ export default function Game() {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameWon, setGameWon] = useState<boolean>(false);
   const [level, setLevel] = useState<number>(0);
+  const [totalHealth, setTotalHealth] = useState<boolean[]>(
+    DEFAULTS.totalHealthXP
+  );
 
   // AUDIO
   const [victoryMusic, setVictoryMusic] = useState<HTMLAudioElement | null>(

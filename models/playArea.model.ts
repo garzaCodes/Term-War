@@ -3,6 +3,7 @@ import { IRank } from "./rank.model";
 export interface IPlayArea {
   correctGuesses: string[];
   showDefinition: boolean;
+  rank: IRank | undefined;
   totalHealth: boolean[];
   showPromotion: boolean;
   clearPromotion: any;
@@ -16,5 +17,4 @@ export interface IPlayArea {
   resetGame: any;
   score: number;
   word: string;
-  rank: IRank | undefined;
 }
